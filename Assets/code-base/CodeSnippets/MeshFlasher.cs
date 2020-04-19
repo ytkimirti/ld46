@@ -22,7 +22,8 @@ public class MeshFlasher : MonoBehaviour
     public Material flashedMaterial;
 
     List<Material[]> defMaterials;
-    bool isFlashing;
+    [ReadOnly]
+    public bool isFlashing;
 
     void Start()
     {

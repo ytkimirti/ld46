@@ -13,9 +13,17 @@ public class GameManager : MonoBehaviour
 
     [Space]
 
-    public Vector2 levelSize;
+    public float fishJumpHeight;
 
     [Header("References")]
+
+    public Transform waterTrans;
+    public float waterRadius;
+
+    public Splasher waterSplasher;
+    public Splasher panSplasher;
+
+    public List<Fish> currFishes = new List<Fish>();
 
     //SINGLETON
     public static GameManager main;
@@ -26,6 +34,11 @@ public class GameManager : MonoBehaviour
     }
 
     void Start()//-start
+    {
+
+    }
+
+    public void OnNextWave()
     {
 
     }
@@ -87,7 +100,7 @@ public class GameManager : MonoBehaviour
 
     private void OnDrawGizmos()
     {
-        Gizmos.DrawWireCube(Vector3.zero, levelSize.ToVector3() * 2);
+
     }
 
     void Update()//-update
