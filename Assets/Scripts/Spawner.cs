@@ -107,13 +107,16 @@ public class Spawner : MonoBehaviour
 
         currWaveID++;
 
-        StartWave(waves[currWaveID]);
+        if (currWaveID != 10)
+        {
+            StartWave(waves[currWaveID]);
 
-        waveTimer = waves[currWaveID].waveWait;
+            waveTimer = waves[currWaveID].waveWait;
 
-        waveBar.maxTime = currWave.waveWait;
+            waveBar.maxTime = currWave.waveWait;
 
-        waveBar.moveBar = false;
+            waveBar.moveBar = false;
+        }
 
         GameManager.main.OnNextWave();
     }
@@ -127,6 +130,11 @@ public class Spawner : MonoBehaviour
         StartCoroutine(dropNewFishes(wave.newFishCount));
 
         AIHand.main.ThrowFishes(wave.newFishCount);
+
+        if (currWaveID > 5)
+        {
+            AIHand.main.hand.lerpSpeed += 1;
+        }
 
         AIHand.main.handSpeed = currWave.handSpeed;
 

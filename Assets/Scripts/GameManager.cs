@@ -12,6 +12,8 @@ public class GameManager : MonoBehaviour
     public bool isGameStarted;
     public bool isGameOver;
 
+    bool gameWon;
+
     public int dedCount;
 
     [Space]
@@ -66,6 +68,12 @@ public class GameManager : MonoBehaviour
         if (wave == 5)
         {
             retroFX.enabled = false;
+        }
+
+        if (wave == 11)
+        {
+            gameWon = true;
+            GameOver();
         }
     }
 
@@ -135,6 +143,11 @@ public class GameManager : MonoBehaviour
         TimeManager.main.endGameTime = 0.002f;
         TimeManager.main.changeSpeed = TimeManager.main.changeSpeed / 4;
 
+        if (gameWon)
+        {
+            winParticle.Play();
+        }
+
         StartCoroutine(gameOverEnum());
 
         print("LOOSE");
@@ -149,7 +162,14 @@ public class GameManager : MonoBehaviour
 
     public void OpenGameOverMenu()
     {
-        gameOverAnim.SetTrigger("GameOver");
+        if (gameWon)
+        {
+            gameOverAnim.SetTrigger("GameWon");
+        }
+        else
+        {
+            gameOverAnim.SetTrigger("GameOver");
+        }
 
         int wave = Spawner.main.currWaveID + 1;
 

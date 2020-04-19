@@ -8,7 +8,7 @@ public class AIHand : MonoBehaviour
 {
     public Transform dropPos;
     public float handSpeed;
-    Hand hand;
+    public Hand hand;
 
     List<int> currTasks = new List<int>();
 
