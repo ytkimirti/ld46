@@ -15,6 +15,8 @@ public class Spawner : MonoBehaviour
         [Space]
         public float handWaitTime = 5;
         public float handWaitTimeRandomness = 2;
+        [Space]
+        public float handSpeed = 1;
         [Range(1, 5)]
         public int maxFishDrop = 1;
     }
@@ -44,8 +46,7 @@ public class Spawner : MonoBehaviour
     [Space]
     public Transform spawnTrans;
     public GameObject fishPrefab;
-
-    public string[] textss;
+    public WaveBar waveBar;
 
     bool isFirstFrame;
 
@@ -66,6 +67,8 @@ public class Spawner : MonoBehaviour
 
     void Update()
     {
+        if (!GameManager.main.isGameStarted || GameManager.main.isGameOver)
+            return;
 
         waveTimer -= Time.deltaTime;
 
@@ -104,29 +107,40 @@ public class Spawner : MonoBehaviour
 
         currWaveID++;
 
-        waveTimer = waves[currWaveID].waveWait;
-
-        print("WAVE " + currWaveID + " STARTED, ");
-
         StartWave(waves[currWaveID]);
 
-        List<string> texts = currWave.waveText.ToList();
+        waveTimer = waves[currWaveID].waveWait;
 
-        texts.Insert(0, "WAVE " + (currWaveID + 1).ToString());
-        texts.Insert(0, "WAVE " + (currWaveID + 1).ToString());
+        waveBar.maxTime = currWave.waveWait;
 
-        textss = texts.ToArray();
+        waveBar.moveBar = false;
 
-        BigText.main.Show(texts.ToArray(), true, slowMoDelay);
+        GameManager.main.OnNextWave();
     }
 
     public void StartWave(Wave wave)
     {
+        print("WAVE " + currWaveID + " STARTED, ");
+
         currWave = wave;
 
         StartCoroutine(dropNewFishes(wave.newFishCount));
 
         AIHand.main.ThrowFishes(wave.newFishCount);
+
+        AIHand.main.handSpeed = currWave.handSpeed;
+
+        //Filler texts
+        string fillerStr = currWave.waveText[Random.Range(0, currWave.waveText.Length)];
+
+        List<string> texts = fillerStr.Split(',').ToList();
+
+        texts.Insert(0, "WAVE " + (currWaveID + 1).ToString());
+        texts.Insert(0, "WAVE " + (currWaveID + 1).ToString());
+
+        //textss = texts.ToArray();
+
+        BigText.main.Show(texts.ToArray(), true, slowMoDelay);
     }
 
     IEnumerator dropNewFishes(int count)

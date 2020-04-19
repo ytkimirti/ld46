@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using NaughtyAttributes;
+using EZCameraShake;
 
 public class Fish : MonoBehaviour
 {
@@ -144,8 +145,9 @@ public class Fish : MonoBehaviour
         {
             health += healPerSecond * Time.deltaTime;
         }
-        else
+        else if (health > 10)
         {
+            //I want them to die when they touch the pan
             health -= damageOutsidePerSecond * Time.deltaTime;
         }
 
@@ -174,12 +176,21 @@ public class Fish : MonoBehaviour
         if (isDed)
             return;
 
+        GameManager.main.currFishes.Remove(this);
+
         fishVisualHolder.SetActive(false);
         dedVisualHolder.SetActive(true);
+
+        ParticleManager.main.play(0, transform.position);
+
+
+        CameraShaker.Instance.ShakeOnce(1, 5, 0, 0.4564284f);
 
         gameObject.layer = dedLayer;
 
         isDed = true;
+
+        GameManager.main.OnFishDed();
     }
 
     private void OnDrawGizmos()
@@ -195,6 +206,9 @@ public class Fish : MonoBehaviour
 
     public void GetHolded(Hand hand)
     {
+        if (isDed)
+            return;
+
         state = "holded";
 
         flasher.Flash();
@@ -244,11 +258,15 @@ public class Fish : MonoBehaviour
                 rb.velocity = rb.velocity.ToVector2().ToVector3() + Vector3.up * newJumpVel;
             else
             {
+                CameraShaker.Instance.ShakeOnce(1, 5, 0, 0.2f);
+
                 rb.velocity = (toCenterDir * randomHorizontalVel).ToVector3() + Vector3.up * newJumpVel;
 
                 ParticleManager.main.play(1, transform.position);
 
                 GameManager.main.panSplasher.Play(transform.position);
+
+                flasher.Flash();
             }
             eyeR.Blink();
             eyeL.Blink();
@@ -259,7 +277,6 @@ public class Fish : MonoBehaviour
 
             CheckHealth();
 
-            flasher.Flash();
         }
     }
 

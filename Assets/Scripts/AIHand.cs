@@ -30,12 +30,15 @@ public class AIHand : MonoBehaviour
 
     void Update()
     {
-
+        if (Input.GetKeyDown(KeyCode.X))
+        {
+            currTasks = new List<int>();
+        }
     }
 
     public void ThrowFishes(int count)
     {
-        print("I HAVE SUMMONED " + count + " TIMES");
+        //print("I HAVE SUMMONED " + count + " TIMES");
         currTasks.Add(count);
     }
 
@@ -52,7 +55,8 @@ public class AIHand : MonoBehaviour
 
             yield return StartCoroutine(throwFishEnum(currTasks[0]));
 
-            currTasks.RemoveAt(0);
+            if (currTasks.Count != 0)
+                currTasks.RemoveAt(0);
 
             yield return new WaitForSeconds(0.1f);
         }
@@ -72,6 +76,11 @@ public class AIHand : MonoBehaviour
             }
 
             hand.input = fish.transform.position;
+            hand.input.y = 1.34f;
+
+            yield return new WaitForSeconds(0.25f * handSpeed);
+
+            hand.input.y = 0.5f;
 
             yield return new WaitForSeconds(0.5f * handSpeed);
 

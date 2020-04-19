@@ -5,6 +5,8 @@ using UnityEngine;
 public class CameraController : MonoBehaviour
 {
     public Vector2 offset;
+    public Vector2 newOffset;
+    public bool isMenu;
     public float angle;
     [Space]
     public float lerpSpeed;
@@ -37,10 +39,20 @@ public class CameraController : MonoBehaviour
     {
         holder.localEulerAngles = new Vector3(angle, 0, 0);
 
-        holder.localPosition = new Vector3(0, offset.y, offset.x);
+        Vector2 currOffset = newOffset;
+
+        if (isMenu)
+            currOffset = offset;
+
+        Vector3 targetPos = new Vector3(0, currOffset.y, currOffset.x);
+
+        if (Application.isPlaying)
+            holder.localPosition = Vector3.Lerp(holder.localPosition, targetPos, lerpSpeed * Time.deltaTime);
+        else
+            holder.localPosition = new Vector3(0, newOffset.y, newOffset.x);
     }
 
-    void FixedUpdate()
+    void LateUpdate()
     {
         UpdateHolder();
     }

@@ -5,6 +5,7 @@ using UnityEngine;
 public class TimeManager : MonoBehaviour
 {
     public float bigTextTime;
+    public float endGameTime;
 
     [Space]
 
@@ -27,6 +28,11 @@ public class TimeManager : MonoBehaviour
     void Update()
     {
         targetTime = bigTextTime;
+
+        if (endGameTime != 1)
+        {
+            targetTime = endGameTime;
+        }
 
         Time.timeScale = Mathf.MoveTowards(Time.timeScale, targetTime, changeSpeed * Time.unscaledDeltaTime);
 

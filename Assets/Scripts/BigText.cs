@@ -4,6 +4,7 @@ using UnityEngine;
 using DG.Tweening;
 using TMPro;
 using UnityEngine.UI;
+using EZCameraShake;
 
 public class BigText : MonoBehaviour
 {
@@ -42,6 +43,7 @@ public class BigText : MonoBehaviour
 
         if (useSlowMo)
         {
+            CameraShaker.Instance.ShakeOnce(2, 5, 0, 1f);
             yield return new WaitForSecondsRealtime(delay);
             TimeManager.main.bigTextTime = slowMoSpeed;
             yield return new WaitForSecondsRealtime(1);
@@ -80,6 +82,8 @@ public class BigText : MonoBehaviour
 
         yield return new WaitForSecondsRealtime(1);
 
+        GameManager.main.OnNextWaveAction();
+
         Color newCol = flasher.color;
 
         newCol.a = 0;
@@ -89,6 +93,8 @@ public class BigText : MonoBehaviour
         text.DOColor(newCol, 0.5f).SetUpdate(true);
 
         TimeManager.main.bigTextTime = 1;
+
+        Spawner.main.waveBar.Show(Spawner.main.currWaveID + 1);
 
         yield return new WaitForSecondsRealtime(0.5f);
 

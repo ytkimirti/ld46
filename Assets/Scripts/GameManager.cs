@@ -5,11 +5,14 @@ using EZCameraShake;
 using DG.Tweening;
 using TMPro;
 using UnityEngine.SceneManagement;
+using UnityEngine.UI;
 
 public class GameManager : MonoBehaviour
 {
-    public bool isLoosed;
+    public bool isGameStarted;
     public bool isGameOver;
+
+    public int dedCount;
 
     [Space]
 
@@ -22,6 +25,21 @@ public class GameManager : MonoBehaviour
 
     public Splasher waterSplasher;
     public Splasher panSplasher;
+
+    public DedCounter dedCounter;
+
+    public ParticleSystem winParticle;
+
+    public Edges retroFX;
+
+    [Space]
+
+    float gameTimer;
+    public TextMeshProUGUI timeToCookText;
+    public TextMeshProUGUI lastWaveText;
+    public GameObject gameLostGO;
+    public GameObject gameWonGO;
+    public Animator gameOverAnim;
 
     public List<Fish> currFishes = new List<Fish>();
 
@@ -40,43 +58,104 @@ public class GameManager : MonoBehaviour
 
     public void OnNextWave()
     {
+        int wave = Spawner.main.currWaveID + 1;
 
+        if (wave != 1)
+            winParticle.Play();
+
+        if (wave == 5)
+        {
+            retroFX.enabled = false;
+        }
     }
 
-    public void Loose()//-loose
+    public void OnNextWaveAction()
+    {
+        int wave = Spawner.main.currWaveID + 1;
+
+        if (wave == 4)
+        {
+            CameraShaker.Instance.ShakeOnce(2.5f, 5, 0, 1f);
+
+            retroFX.enabled = true;
+            winParticle.Play();
+        }
+    }
+
+    public void OnFishDed()
     {
         if (isGameOver)
             return;
 
-        isLoosed = true;
+        dedCount++;
 
-        Invoke("RestartGame", 2f);
+        dedCounter.UpdateCount(dedCount);
 
-        print("LOOSE");
-
-        GameOver();
+        if (dedCount != 3)
+        {
+            Time.timeScale = 0.1f;
+        }
+        else
+        {
+            GameOver();
+        }
     }
 
-    public void Win()//-win
+    public void OnStartPressed()
     {
-        if (isGameOver)
+        if (!CameraController.main.isMenu)
+        {
+            return;
+        }
+
+        CameraController.main.isMenu = false;
+
+        Invoke("StartGame", 2f);
+    }
+
+    public void StartGame()
+    {
+        if (isGameStarted)
             return;
 
-        isLoosed = false;
+        isGameStarted = true;
 
-        print("WIN");
-
-        GameOver();
+        CameraController.main.isMenu = false;
     }
 
-    void GameOver()//-gameover
+    public void GameOver()//-loose
     {
         if (isGameOver)
             return;
 
         isGameOver = true;
 
-        //Game over code
+        CameraShaker.Instance.ShakeOnce(2, 5, 0, 1f);
+
+        TimeManager.main.endGameTime = 0.002f;
+        TimeManager.main.changeSpeed = TimeManager.main.changeSpeed / 4;
+
+        StartCoroutine(gameOverEnum());
+
+        print("LOOSE");
+    }
+
+    IEnumerator gameOverEnum()
+    {
+        yield return new WaitForSecondsRealtime(4f);
+
+        OpenGameOverMenu();
+    }
+
+    public void OpenGameOverMenu()
+    {
+        gameOverAnim.SetTrigger("GameOver");
+
+        int wave = Spawner.main.currWaveID + 1;
+
+        timeToCookText.text = "Time took to cook: " + Mathf.Round(gameTimer).ToString() + "s";
+
+        lastWaveText.text = wave.ToString();
     }
 
     public void RestartGame()//-restart
@@ -105,6 +184,17 @@ public class GameManager : MonoBehaviour
 
     void Update()//-update
     {
+        if (!isGameOver)
+            gameTimer += Time.deltaTime;
 
+        if (Input.GetKeyDown(KeyCode.K))
+        {
+            currFishes[Random.Range(0, currFishes.Count)]?.Die();
+        }
+
+        if (!isGameStarted && Input.GetKeyDown(KeyCode.Mouse0) && Input.mousePosition.y < Screen.height / 3)
+        {
+            OnStartPressed();
+        }
     }
 }
