@@ -32,7 +32,7 @@ public class Fader : MonoBehaviour
         image.DOKill();
         image.enabled = true;
         image.color = new Color(0, 0, 0, 0);
-        image.DOColor(Color.black, fadeSpeed);
+        image.DOColor(Color.black, fadeSpeed).SetUpdate(true);
     }
 
     public void FadeOut()
@@ -40,7 +40,7 @@ public class Fader : MonoBehaviour
         image.DOKill();
         image.enabled = true;
         image.color = Color.black;
-        image.DOColor(new Color(0, 0, 0, 0), fadeSpeed).OnComplete(Disable);
+        image.DOColor(new Color(0, 0, 0, 0), fadeSpeed).OnComplete(Disable).SetUpdate(true);
     }
 
     void Disable()

@@ -18,6 +18,8 @@ AudioMixerController:
   m_ExposedParameters:
   - guid: e92302760ffbf467abefdbf65e1b0f3b
     name: MasterPitch
+  - guid: a8f7a5318305e114eb42874fcafa258f
+    name: MasterVol
   - guid: ccb9754106dd24b9ea49c39d731d121d
     name: MusicVol
   m_AudioMixerGroupViews:
@@ -85,6 +87,7 @@ AudioMixerSnapshotController:
   m_AudioMixer: {fileID: 24100000}
   m_SnapshotID: a46f694db341f4d4cab2455dfe66633b
   m_FloatValues:
+    a8f7a5318305e114eb42874fcafa258f: -17.938717
     76f8e872912c3458bb6b84cf95e3f463: 11.852726
     c0fdcbe5edd9ff8438c8a9b1c1f30ec2: -8.362404
     45bf98a6e34c74a9ebe91ef8eaed520b: -14.816608

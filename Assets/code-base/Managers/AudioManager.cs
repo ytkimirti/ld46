@@ -83,23 +83,8 @@ public class AudioManager : MonoBehaviour
 
     void Start()
     {
-        SetAudio(isAudioOn);
-    }
+        mixer.DOSetFloat("MasterVol", 0, 2).SetUpdate(true);
 
-    public void SetAudio(bool on)
-    {
-        isAudioOn = on;
-
-        if (on)
-        {
-            mixer.SetFloat("MasterVolume", 0);
-            PlayerPrefs.SetInt("audio", 1);
-        }
-        else
-        {
-            mixer.SetFloat("MasterVolume", -80);
-            PlayerPrefs.SetInt("audio", 0);
-        }
     }
 
     //Çalması
@@ -143,6 +128,12 @@ public class AudioManager : MonoBehaviour
 
     }
 
+    public void CloseAudio()
+    {
+        mixer.DOSetFloat("MasterVol", -30, 2).SetUpdate(true);
+
+    }
+
     public void SetMusic(float volume, bool fast)
     {
         mixer.DOKill();
@@ -150,6 +141,6 @@ public class AudioManager : MonoBehaviour
         if (fast)
             mixer.SetFloat("MusicVol", volume);
         else
-            mixer.DOSetFloat("MusicVol", volume, 1);
+            mixer.DOSetFloat("MusicVol", volume, 1).SetUpdate(true);
     }
 }

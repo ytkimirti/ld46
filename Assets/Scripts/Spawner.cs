@@ -63,6 +63,8 @@ public class Spawner : MonoBehaviour
         currWaveID = -1;
 
         isFirstFrame = true;
+
+        AudioManager.main.SetMusic(0, true);
     }
 
     void Update()
@@ -72,7 +74,7 @@ public class Spawner : MonoBehaviour
 
         waveTimer -= Time.deltaTime;
 
-        if (waveTimer <= 0 || Input.GetKeyDown(KeyCode.Space))
+        if (waveTimer <= 0 || (Input.GetKeyDown(KeyCode.Space) && false))
         {
             NextWave();
         }

@@ -30,7 +30,7 @@ public class AIHand : MonoBehaviour
 
     void Update()
     {
-        if (Input.GetKeyDown(KeyCode.X))
+        if (false && Input.GetKeyDown(KeyCode.X))
         {
             currTasks = new List<int>();
         }

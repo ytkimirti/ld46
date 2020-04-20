@@ -149,7 +149,7 @@ public class GameManager : MonoBehaviour
             return;
         }
 
-        AudioManager.main.SetMusic(-60, false);
+        AudioManager.main.SetMusic(-30, false);
 
         CameraController.main.isMenu = false;
 
@@ -160,6 +160,8 @@ public class GameManager : MonoBehaviour
     {
         if (isGameStarted)
             return;
+
+        dedCounter.gameObject.SetActive(true);
 
         isGameStarted = true;
 
@@ -173,7 +175,9 @@ public class GameManager : MonoBehaviour
         if (isGameOver)
             return;
 
-        StopMusic();
+        //StopMusic();
+
+        AudioManager.main.SetMusic(-30, false);
 
         isGameOver = true;
 
@@ -210,6 +214,8 @@ public class GameManager : MonoBehaviour
             gameOverAnim.SetTrigger("GameOver");
         }
 
+        AudioManager.main.CloseAudio();
+
         int wave = Spawner.main.currWaveID + 1;
 
         timeToCookText.text = "Time took to cook: " + Mathf.Round(gameTimer).ToString() + "s";
@@ -223,12 +229,19 @@ public class GameManager : MonoBehaviour
         {
             Fader.main.FadeIn();
 
-            Invoke("ReloadScene", Fader.main.fadeSpeed);
+            StartCoroutine(RestartEnum());
         }
         else
         {
             ReloadScene();
         }
+    }
+
+    IEnumerator RestartEnum()
+    {
+        yield return new WaitForSecondsRealtime(Fader.main.fadeSpeed);
+
+        ReloadScene();
     }
 
     public void ReloadScene()
@@ -246,9 +259,14 @@ public class GameManager : MonoBehaviour
         if (!isGameOver)
             gameTimer += Time.deltaTime;
 
-        if (Input.GetKeyDown(KeyCode.K))
+        if (false && Input.GetKeyDown(KeyCode.K))
         {
             currFishes[Random.Range(0, currFishes.Count)]?.Die();
+        }
+
+        if (Input.GetKeyDown(KeyCode.R))
+        {
+            RestartGame();
         }
 
         if (!isGameStarted && Input.GetKeyDown(KeyCode.Mouse0) && Input.mousePosition.y < Screen.height / 3)
