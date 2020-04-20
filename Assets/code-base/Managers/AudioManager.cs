@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using System;
+using DG.Tweening;
 using UnityEngine.Audio;
 using Random = UnityEngine.Random;
 
@@ -130,5 +131,25 @@ public class AudioManager : MonoBehaviour
             return;
 
         s.source.Stop();
+    }
+
+    float pitch = 1;
+
+    void Update()
+    {
+        pitch = Mathf.Lerp(0.1f, 1, Time.timeScale);
+
+        mixer.SetFloat("MasterPitch", pitch);
+
+    }
+
+    public void SetMusic(float volume, bool fast)
+    {
+        mixer.DOKill();
+
+        if (fast)
+            mixer.SetFloat("MusicVol", volume);
+        else
+            mixer.DOSetFloat("MusicVol", volume, 1);
     }
 }

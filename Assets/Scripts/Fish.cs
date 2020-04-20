@@ -77,6 +77,11 @@ public class Fish : MonoBehaviour
             //When entering water from outside
             if (state == "water")
             {
+                if (M.Change(40))
+                    AudioManager.main.Play("happy");
+
+                AudioManager.main.Play("water");
+
                 flasher.Flash(2);
                 GameManager.main.waterSplasher.Play(transform.position);
             }
@@ -258,6 +263,11 @@ public class Fish : MonoBehaviour
                 rb.velocity = rb.velocity.ToVector2().ToVector3() + Vector3.up * newJumpVel;
             else
             {
+                AudioManager.main.Play("tss");
+
+                if (M.Change(60))
+                    AudioManager.main.Play("hit");
+
                 CameraShaker.Instance.ShakeOnce(1, 5, 0, 0.2f);
 
                 rb.velocity = (toCenterDir * randomHorizontalVel).ToVector3() + Vector3.up * newJumpVel;

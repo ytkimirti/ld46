@@ -73,6 +73,8 @@ public class BigText : MonoBehaviour
 
                 text.transform.DOScale(Vector3.one * defTextScale, flashSpeed).SetUpdate(true);
 
+                AudioManager.main.Play("bigtext");
+
                 lastText = texts[i];
 
             }

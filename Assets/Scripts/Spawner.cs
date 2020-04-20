@@ -105,6 +105,9 @@ public class Spawner : MonoBehaviour
         if (currWaveID == waves.Length)
             return;
 
+        if (currWaveID != -1 && GameManager.main.isInfiniteGameplay)
+            return;
+
         currWaveID++;
 
         if (currWaveID != 10)

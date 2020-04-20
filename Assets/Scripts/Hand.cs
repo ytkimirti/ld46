@@ -68,6 +68,8 @@ public class Hand : MonoBehaviour
         currFish = fish;
 
         fish.GetHolded(this);
+
+        AudioManager.main.Play("pop");
     }
 
     public Vector3 findPos(bool isDefault)

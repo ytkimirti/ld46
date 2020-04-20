@@ -44,6 +44,9 @@ public class AIHand : MonoBehaviour
 
     IEnumerator doTasks()
     {
+        if (GameManager.main.isInfiniteGameplay)
+            yield return null;
+
         while (true)
         {
             //Wait until you have a task like a good boy

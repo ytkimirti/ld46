@@ -9,6 +9,7 @@ using UnityEngine.UI;
 
 public class GameManager : MonoBehaviour
 {
+    public bool isInfiniteGameplay;
     public bool isGameStarted;
     public bool isGameOver;
 
@@ -43,6 +44,10 @@ public class GameManager : MonoBehaviour
     public GameObject gameWonGO;
     public Animator gameOverAnim;
 
+    public AudioSource musicSource;
+    public AudioClip[] musics;
+    int lastMusic;
+
     public List<Fish> currFishes = new List<Fish>();
 
     //SINGLETON
@@ -60,6 +65,8 @@ public class GameManager : MonoBehaviour
 
     public void OnNextWave()
     {
+        StopMusic();
+
         int wave = Spawner.main.currWaveID + 1;
 
         if (wave != 1)
@@ -77,6 +84,30 @@ public class GameManager : MonoBehaviour
         }
     }
 
+    public void StopMusic()
+    {
+        musicSource.Stop();
+    }
+
+    public void PlayMusic()
+    {
+        musicSource.Stop();
+
+        int randClip = Random.Range(0, musics.Length);
+
+        while (randClip != lastMusic)
+        {
+            randClip = Random.Range(0, musics.Length);
+        }
+
+        lastMusic = randClip;
+
+        musicSource.clip = musics[randClip];
+
+        musicSource.Play();
+    }
+
+
     public void OnNextWaveAction()
     {
         int wave = Spawner.main.currWaveID + 1;
@@ -88,6 +119,8 @@ public class GameManager : MonoBehaviour
             retroFX.enabled = true;
             winParticle.Play();
         }
+
+        PlayMusic();
     }
 
     public void OnFishDed()
@@ -116,6 +149,8 @@ public class GameManager : MonoBehaviour
             return;
         }
 
+        AudioManager.main.SetMusic(-60, false);
+
         CameraController.main.isMenu = false;
 
         Invoke("StartGame", 2f);
@@ -129,12 +164,16 @@ public class GameManager : MonoBehaviour
         isGameStarted = true;
 
         CameraController.main.isMenu = false;
+
+        AudioManager.main.SetMusic(0, true);
     }
 
     public void GameOver()//-loose
     {
         if (isGameOver)
             return;
+
+        StopMusic();
 
         isGameOver = true;
 
